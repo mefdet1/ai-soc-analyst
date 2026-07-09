@@ -29,6 +29,8 @@ What it found
 
 The Isolation Forest surfaced 252 anomalous logins the legacy rules called safe (model_blind_spots.csv). Those are the blind spots — the compromises hiding in traffic the rules waved through. That's the case for unsupervised detection in one number.
 
+---------------------------------------------------------------------------------------------------------------------------
+
 Architecture
 
 Two complementary paths:
@@ -37,19 +39,7 @@ Batch path — retrospective detection and validation. Clean the logs, score eve
 
 API path real-time production scoring. An Express server takes a single login, scores it against the trained model, and if it trips the anomaly flag, routes it to an LLM analyst (Claude via LangChain) that writes an incident-response report for the engineering team.
 
-Pipeline
-
-users.csv + SignIns.csv
-        │
-        ▼
-cleaning_script.py      →  ml_ready_logs.csv   (merge, temporal features, encode, drop noise)
-        │
-        ├─► training_script.py   →  presentation_blind_spots.csv   (supervised baseline — see "the crime")
-        │
-        └─► evaluate_models.py    →  model_blind_spots.csv + isolation_forest_model.pkl
-                                          │
-                                          ▼
-                              server.js  →  spawns predict.py  →  ai_analyst.js (LLM report)
+---------------------------------------------------------------------------------------------------------------------------
 
 Stack
 
